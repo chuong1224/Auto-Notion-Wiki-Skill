@@ -1,6 +1,6 @@
 ---
 name: ai-wiki-curator
-version: 1.2.0
+version: 1.3.0
 description: Kich hoat khi user muon luu noi dung vao AI Wiki tren Notion, them kien thuc AI, phan loai link bai viet, ghi chu, tool, prompt, nguon theo doi. BAT CU KHI NAO user noi: luu link nay, them tool nay, ghi lai prompt nay, theo doi kenh nay, save cai nay vao wiki, update wiki AI, add vao notion. Vi du: "luu link nay vao wiki", "them tool nay vao notion", "ghi lai prompt nay", "theo doi kenh youtube nay", "save bai viet nay", "luu note nay", "add this to my AI wiki", "save to notion wiki". Khong kich hoat khi user chi hoi kien thuc (what is X?) hoac yeu cau tao noi dung moi khong co y dinh luu.
 ---
 
@@ -11,7 +11,7 @@ Nhận input từ user → phân loại tự động → ghi vào đúng databas
 
 ## Cấu Trúc Wiki (5 Database + 1 Sub-page)
 
-Khi wiki chưa tồn tại, tạo đủ cấu trúc dưới master page **🧠 AI Wiki**:
+Khi wiki chưa tồn tại, tạo đủ cấu trúc dưới master page 🧠 AI Wiki:
 
 | Thành phần | Loại | Nội dung |
 |---|---|---|
@@ -26,42 +26,47 @@ Khi wiki chưa tồn tại, tạo đủ cấu trúc dưới master page **🧠 A
 
 ## Workflow (6 Bước)
 
-**B1 — Parse**: Tách URL và text. Nếu có URL → web_fetch lấy title + mô tả ngắn.
+B1 — Parse: Tách URL và text. Nếu có URL → web_fetch lấy title + mô tả ngắn.
 Nếu fetch thất bại → vẫn tiếp tục với URL gốc.
 
-**B2 — Phân loại**: Áp dụng bảng Classification bên dưới.
+B2 — Phân loại: Áp dụng bảng Classification bên dưới.
 Nếu không chắc → hỏi user 1 câu, đưa 2 lựa chọn cụ thể.
 
-**B3 — Kiểm tra trùng**: Dùng notion-search trước khi tạo.
+B3 — Kiểm tra trùng: Dùng notion-search trước khi tạo.
 Nếu đã tồn tại → hỏi "Cập nhật hay tạo mới?"
 
-**B4 — Ghi Notion**: Tạo entry với đầy đủ properties theo schema bên dưới.
+B4 — Ghi Notion: Tạo entry với đầy đủ properties theo schema bên dưới.
 Nếu database chưa có → tạo mới.
 
-**B5 — Cập nhật Wiki Metadata** *(Bước mới v1.2.0)*:
+> ⚠️ CONTENT INTEGRITY RULE (v1.3.0 — BẮT BUỘC)
+>
+> Khi lưu Prompt, Note, Skill, Template (bất kỳ nội dung dạng text thuần do user cung cấp):
+> - TUYỆT ĐỐI KHÔNG chỉnh sửa từ ngữ, paraphrase, thêm ý, bớt ý, dịch, hoặc viết lại theo cách khác
+> - CHỈ ĐƯỢC PHÉP format để dễ đọc: code block, xuống dòng, căn chỉnh khoảng trắng, emoji section header
+> - Quy tắc kiểm tra: nếu đọc lại nội dung lưu mà không thấy đúng 100% từng từ của user → sai
+> - Với URL/link: fetch title và mô tả ngắn từ web là bình thường, không vi phạm rule này
+
+B5 — Cập nhật Wiki Metadata:
 
 *5a — Cập nhật "Cập nhật lần cuối" trên master page 🧠 AI Wiki:*
 - Tìm text block chứa "Cập nhật lần cuối" ở cuối master page
-- Nếu tìm thấy → cập nhật ngày hôm nay: `_Cập nhật lần cuối: DD/MM/YYYY_`
+- Nếu tìm thấy → cập nhật ngày hôm nay: _Cập nhật lần cuối: DD/MM/YYYY_
 - Nếu chưa có → append text block mới ở cuối trang với nội dung trên
 
 *5b — Ghi vào sub-page 📋 Change Logs:*
 - Tìm sub-page "📋 Change Logs" bên trong 🧠 AI Wiki
 - Nếu chưa có → tạo sub-page mới, tiêu đề "📋 Change Logs", version bắt đầu v1.0
-- Nếu đã có → đọc entry đầu tiên để lấy version mới nhất → tăng minor version (v1.0 → v1.1 → v1.2)
+- Nếu đã có → đọc entry đầu tiên để lấy version mới nhất → tăng minor version (v1.0 → v1.1)
 - Thêm entry MỚI Ở ĐẦU TRANG (prepend), không append cuối:
-  `Version vX.X - DD/MM/YYYY - [Nội dung cập nhật]`
-- Nội dung cập nhật = auto-generate theo pattern: "[Action] [Category]: [Title]"
-  Ví dụ: "Them tool: Cursor AI", "Luu paper: MoE Survey", "Ghi note: RAG best practices"
+ Version vX.X - DD/MM/YYYY - [Nội dung cập nhật]
+- Nội dung cập nhật = auto-generate: "[Action] [Category]: [Title]"
+ Ví dụ: "Them tool: Cursor AI", "Luu paper: MoE Survey", "Ghi note: RAG best practices"
 
-**B6 — Xác nhận**:
-```
-✅ Đã lưu: [Tên]
+B6 — Xác nhận:✅ Đã lưu: [Tên]
 📁 Vào mục: [Database]
 🏷 Tags: [tag1, tag2]
 📅 Change Log: Version vX.X - DD/MM/YYYY
 🔗 Notion: [link]
-```
 
 ---
 
@@ -133,7 +138,7 @@ Nếu database chưa có → tạo mới.
 | Property | Type | Ghi chú |
 |---|---|---|
 | Tên Prompt | title | Đặt tên mô tả mục đích |
-| Nội dung | rich_text | Full text prompt/template |
+| Nội dung | rich_text | ⚠️ Lưu NGUYÊN VĂN — không chỉnh sửa |
 | Loại | select | System Prompt / User Prompt / Template / Chain |
 | Dùng cho | multi_select | Viết lách / Coding / Research / Phân tích |
 | Tags | multi_select | |
@@ -156,7 +161,7 @@ Nếu database chưa có → tạo mới.
 | Property | Type | Ghi chú |
 |---|---|---|
 | Tiêu đề | title | Tóm tắt 1 dòng (tự sinh nếu user không cung cấp) |
-| Nội dung | rich_text | Toàn bộ nội dung |
+| Nội dung | rich_text | ⚠️ Lưu NGUYÊN VĂN — không chỉnh sửa |
 | Tags | multi_select | |
 | Trạng thái | select | Ghi nhanh / Cần xử lý / Đã xử lý |
 | Ngày lưu | date | Auto |
@@ -165,14 +170,15 @@ Nếu database chưa có → tạo mới.
 
 ## Gotchas
 
-**G1 — Input mơ hồ**: Không tự đoán. Hỏi 1 câu, 2 lựa chọn cụ thể.
-**G2 — Trùng lặp**: Luôn search Notion trước. Không tạo duplicate mà không hỏi.
-**G3 — Database chưa có**: Lần đầu → tạo đủ 5 database + master page. Ghi vào database, không phải page thường.
-**G4 — URL không fetch được**: Không dừng. Tạo entry với URL gốc, title để user điền sau.
-**G5 — Nhiều items cùng lúc**: Xử lý tuần tự từng item. Báo tóm tắt tất cả ở cuối.
-**G6 — Profile vs Post**: youtube.com/@channel → Nguồn Theo Dõi. youtube.com/watch → Kiến Thức.
-**G7 — Thiếu tags**: Tự suy luận 2–3 tags từ title/content. Không để trống.
-**G8 — Lần đầu khởi tạo**: Hỏi xác nhận trước khi tạo hàng loạt 5 database.
-**G9 — Change Logs chưa tồn tại**: Tạo sub-page "📋 Change Logs" ngay bên trong 🧠 AI Wiki. Entry đầu tiên bắt đầu từ v1.0. Không hỏi user, tự tạo.
-**G10 — "Cập nhật lần cuối" chưa có trên master page**: Append text block mới ở cuối trang. Không để master page thiếu dòng này.
-**G11 — Không đọc được version từ Change Logs**: Nếu page tồn tại nhưng không parse được version → dùng ngày làm fallback: `Version [YYYYMMDD] - DD/MM/YYYY - [Nội dung]`. Không bỏ qua bước ghi Change Logs.
+G1 — Input mơ hồ: Không tự đoán. Hỏi 1 câu, 2 lựa chọn cụ thể.
+G2 — Trùng lặp: Luôn search Notion trước. Không tạo duplicate mà không hỏi.
+G3 — Database chưa có: Lần đầu → tạo đủ 5 database + master page. Ghi vào database, không phải page thường.
+G4 — URL không fetch được: Không dừng. Tạo entry với URL gốc, title để user điền sau.
+G5 — Nhiều items cùng lúc: Xử lý tuần tự từng item. Báo tóm tắt tất cả ở cuối.
+G6 — Profile vs Post: youtube.com/@channel → Nguồn Theo Dõi. youtube.com/watch → Kiến Thức.
+G7 — Thiếu tags: Tự suy luận 2–3 tags từ title/content. Không để trống.
+G8 — Lần đầu khởi tạo: Hỏi xác nhận trước khi tạo hàng loạt 5 database.
+G9 — Change Logs chưa tồn tại: Tạo sub-page "📋 Change Logs" ngay bên trong 🧠 AI Wiki. Entry đầu tiên bắt đầu từ v1.0. Không hỏi user, tự tạo.
+G10 — "Cập nhật lần cuối" chưa có trên master page: Append text block mới ở cuối trang. Không để master page thiếu dòng này.
+G11 — Không đọc được version từ Change Logs: Nếu page tồn tại nhưng không parse được version → dùng ngày làm fallback: Version [YYYYMMDD] - DD/MM/YYYY - [Nội dung]. Không bỏ qua bước ghi Change Logs.
+G12 — Tự ý chỉnh sửa nội dung Prompt / Note / Skill (v1.3.0): TUYỆT ĐỐI KHÔNG paraphrase, dịch, rút gọn, hay viết lại nội dung do user cung cấp. Chỉ được phép format thuần túy: thêm code block, xuống dòng, căn chỉnh. Nếu cảm thấy muốn "cải thiện" câu chữ → DỪNG. Lưu nguyên văn. Vi phạm rule này là lỗi nghiêm trọng nhất của skill.

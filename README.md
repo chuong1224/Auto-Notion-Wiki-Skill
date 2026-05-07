@@ -10,14 +10,7 @@
   <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill/commits/main">
     <img src="https://img.shields.io/github/last-commit/chuong1224/Auto-Notion-Wiki-Skill" alt="Last commit">
   </a>
-  <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill">
-    <img src="https://img.shields.io/github/stars/chuong1224/Auto-Notion-Wiki-Skill?style=social" alt="GitHub Stars">
-  </a>
 </p>
-
-> A Claude Code skill that automatically saves, classifies, and organizes AI knowledge into your Notion wiki — articles, tools, prompts, sources, **open source repos**, and notes, all in one place.
-
-> Skill cho Claude Code tự động lưu, phân loại và tổ chức kiến thức AI vào Notion wiki của bạn — bài viết, công cụ, prompt, nguồn theo dõi, **repo open source** và ghi chú, tất cả trong một nơi.
 
 **Version:** 2.0.0 · **License:** MIT
 
@@ -25,10 +18,10 @@
 
 ## Version History
 
-| Version | Date       | Key Changes |
-|---------|------------|-------------|
-| **2.0.0** | 2026-05-07 | Added **💻 Open Source Repos** database (6 databases total). Fixed classification so `github.com/{user}/{repo}` now correctly goes to Open Source Repos instead of Tools. Added Gotchas **G13–G15**. Updated all classification rules, schemas, and workflow details. |
-| 1.3.0   | 2026-04-24 | Initial public release with 5 databases and core 6-step workflow. |
+| Version | Date       | Changes |
+|---------|------------|---------|
+| **2.0.0** | 2026-05-07 | Added 💻 Open Source Repos database. Fixed GitHub repo classification. Added Gotchas G13–G15. |
+| 1.3.0   | 2026-04-24 | Initial public release. |
 
 ---
 
@@ -36,147 +29,60 @@
 
 ### What is AI Wiki Curator?
 
-**AI Wiki Curator** is a [Claude Code](https://claude.ai/code) skill that turns a single save command into a fully structured Notion wiki entry. Paste a link, drop a prompt, write a quick note, or share a GitHub repo — Claude automatically classifies it, fills in the metadata, saves it to the right Notion database, and logs the change.
+**AI Wiki Curator** is a skill for Claude Code that automatically saves, classifies, and organizes AI-related content into your Notion wiki. It supports articles, tools, prompts, sources to follow, open source repositories, and personal notes.
 
-### Trigger Phrases
+The skill only activates when you explicitly want to save something. It does not respond to general knowledge questions.
 
-The skill activates whenever you say something like:
+### Trigger Commands
 
-| You say | Claude does |
+Use any of the following commands:
+
+| Command Example | Result |
 |---|---|
-| `luu link nay vao wiki` | Save URL → classify → write to Notion |
-| `them tool nay vao notion` | Create a tool entry in 🛠 Công Cụ AI |
-| `ghi lai prompt nay` | Save prompt to 🧩 Prompt & Template |
-| `theo doi kenh youtube nay` | Add channel to 📡 Nguồn Theo Dõi |
-| `save bai viet nay` | Save article to 📚 Kiến Thức |
-| `luu repo github nay` / `save this open source repo` | Save repo to 💻 Open Source Repos |
-| `luu note nay` | Save to 🗒 Ghi Chú Cá Nhân |
-| `add this to my AI wiki` | Same as above, English version |
+| `save this link to wiki` | Save URL to the correct database |
+| `add this tool` | Create entry in AI Tools |
+| `save this prompt` | Save to Prompt & Template |
+| `save this GitHub repo` | Save to Open Source Repos |
+| `add this to my AI wiki` | General save command |
 
-> The skill does **not** activate for pure knowledge questions (`what is X?`) or content-creation requests with no intent to save.
+Vietnamese commands are also supported (e.g. `luu link nay vao wiki`, `luu repo github nay`).
 
-### Wiki Structure (6 Databases + Change Logs)
+### Wiki Structure
 
-On first run, the skill creates a full structure under a master Notion page **🧠 AI Wiki**:
+The skill creates 6 databases under a master page called **🧠 AI Wiki**:
 
-| Component | Type | Contains |
-|---|---|---|
-| 📚 Kiến Thức & Nghiên Cứu | Database | Papers, articles, blogs, single videos |
-| 🛠 Công Cụ AI | Database | Tools, apps, APIs, SaaS |
-| **💻 Open Source Repos** | **Database** | **GitHub / GitLab / Codeberg repos, free OSS projects** |
-| 🧩 Prompt & Template | Database | Prompts, system prompts, templates |
-| 📡 Nguồn Theo Dõi | Database | Channels, profiles, newsletters, communities |
-| 🗒 Ghi Chú Cá Nhân | Database | Raw notes, insights, ideas |
-| 📋 Change Logs | Sub-page | Full update history with versioning |
+- 📚 Knowledge & Research
+- 🛠 AI Tools
+- 💻 Open Source Repos
+- 🧩 Prompt & Template
+- 📡 Sources to Follow
+- 📝 Personal Notes
+- 📋 Change Logs (sub-page)
 
-### 6-Step Workflow
+### Workflow
 
-1. **Parse** — Extract URL and text. Fetch title + description from the URL if available.
-2. **Classify** — Apply classification rules (see below). Ask user if ambiguous.
-3. **Dedup check** — Search Notion before creating. Offer update vs. new if duplicate found.
-4. **Write to Notion** — Create entry with full schema. Create database if missing.
+1. Parse input
+2. Classify content
+3. Check for duplicates in Notion
+4. Write entry with full metadata
+5. Update master page and Change Logs
+6. Show confirmation with Notion link
 
-> ⚠️ **CONTENT INTEGRITY RULE (v2.0.0)**
-> When saving Prompts, Notes, Skills, Templates (any plain text content from user):
-> - **NEVER** edit, paraphrase, add/remove meaning, translate, or rewrite
-> - **ONLY** allowed to format for readability: code blocks, line breaks, whitespace, emoji headers
-> - For URLs: fetching title and short description is fine, doesn't violate this rule
+**Important Rule:** User-provided text is always saved **verbatim**. Only formatting is allowed.
 
-5. **Update metadata** —
-   - **5a.** Update "Last updated" timestamp on the master page 🧠 AI Wiki (append if missing).
-   - **5b.** Prepend new entry to 📋 Change Logs with auto-incremented version.
-6. **Confirm** — Print a summary with Notion link.
+### Classification Highlights (v2.0.0)
 
-``` 
-✅ Saved: langchain
-📁 Into: 💻 Open Source Repos
-🏷 Tags: local-run, production-ready
-📅 Change Log: Version v2.0 - 07/05/2026
-🔗 Notion: https://notion.so/…
-```
+GitHub repositories (`github.com/{user}/{repo}`) are now saved to the **Open Source Repos** database.
 
-### Auto-Classification (Updated in v2.0.0)
-
-**By URL domain:**
-
-| URL Pattern | Database | Tag |
-|---|---|---|
-| `arxiv.org`, `paperswithcode.com`, `openreview.net` | 📚 Kiến Thức | paper |
-| `youtube.com/@channel`, `youtube.com/channel/` | 📡 Nguồn Theo Dõi | YouTube |
-| `youtube.com/watch`, `youtu.be/{id}` | 📚 Kiến Thức | video |
-| `twitter.com/{user}` / `x.com/{user}` (profile) | 📡 Nguồn Theo Dõi | Twitter-X |
-| `twitter.com/{user}/status/` (specific tweet) | 📚 Kiến Thức | article |
-| `github.com/{user}` (profile) | 📡 Nguồn Theo Dõi | GitHub |
-| **`github.com/{user}/{repo}`** | **`💻 Open Source Repos`** | **`repo`** |
-| `huggingface.co/papers/` | 📚 Kiến Thức | paper |
-| `huggingface.co/spaces/` | 🛠 Công Cụ AI | demo |
-| `huggingface.co/models/`, `/datasets/` | 🛠 Công Cụ AI | model |
-| `cursor.sh`, `v0.dev`, `perplexity.ai`... | 🛠 Công Cụ AI | tool |
-| `medium.com`, `dev.to`... | 📚 Kiến Thức | article |
-| `discord.gg/`, `reddit.com/r/` | 📡 Nguồn Theo Dõi | community |
-
-> **Note:** Repos with a commercial hosted version (e.g. Supabase, Milvus) → still go to 💻 Open Source Repos if you paste the GitHub link.
-
-**By text content (no URL):**
-
-| Signal | Database | Tag |
-|---|---|---|
-| Starts with "Act as", "You are a", "Bạn là" + `###` | 🧩 Prompt | system-prompt |
-| Template with `[placeholder]` | 🧩 Prompt | template |
-| Short quick note | 🗒 Ghi Chú | raw-note |
-| Long structured text | 🗒 Ghi Chú | note |
-
-### Notion Database Schema (v2.0.0)
-
-**💻 Open Source Repos** (new in v2.0.0)
-
-| Property | Type | Notes |
-|---|---|---|
-| Tên Repo | title | Repo name (e.g. langchain, ollama) |
-| URL | url | Original repo URL |
-| Ngôn ngữ | select | Python / JavaScript / TypeScript / Rust / Go / C++ / Other |
-| Danh mục | select | LLM / Agent / RAG / Fine-tuning / Framework / Inference / Utils / Tools / Dataset |
-| Tags | multi_select | local-run, no-GPU, GPU-required, beginner-friendly, production-ready, MIT, Apache-2.0 |
-| Mô tả | rich_text | What the repo does + why you saved it (1–3 sentences) |
-| License | select | MIT / Apache-2.0 / GPL / BSD / Other / Unknown |
-| Stars ước tính | select | dưới-1k / 1k-10k / 10k-50k / 50k+ |
-| Ngày lưu | date | Auto |
-| Đã clone / thử | checkbox | Default: false |
-
-*(Other databases remain similar to v1.3.0 with minor improvements — full details in `ai-wiki-curator.md`)*
-
-### Requirements
-
-| Requirement | Details |
-|---|---|
-| Claude Code | Latest version |
-| `NOTION_API_KEY` | Internal integration token from Notion Integrations |
-| `NOTION_PAGE_ID` | ID of your **🧠 AI Wiki** parent page |
+Full classification table and database schemas are available in the file `ai-wiki-curator.md`.
 
 ### Installation
 
-1. Copy the skill file:
-   ```bash
-   cp ai-wiki-curator.md ~/.claude/skills/     # global
-   # or
-   cp ai-wiki-curator.md .claude/skills/       # project-local
-   ```
-
-2. Set environment variables and grant Notion integration access.
-
-3. On first use, Claude will create the 6 databases + master page.
-
-### Gotchas (Updated v2.0.0)
-
-- **G13** — Repo có hosted version thương mại (Supabase, Milvus...): Paste GitHub link → 💻 Open Source Repos. Paste landing page → 🛠 Công Cụ AI.
-- **G14** — Thiếu License / Stars: Dùng giá trị "Unknown" / "dưới-1k" làm default, không block việc lưu.
-- **G15** — Hugging Face: `huggingface.co/models/` → 🛠 Công Cụ AI (model). GitHub code repo của cùng project → 💻 Open Source Repos (riêng biệt).
-
-*(Full list of 15 Gotchas available in the detailed skill file `ai-wiki-curator.md`)*
+Copy `ai-wiki-curator.md` into your Claude Code skills folder and set your Notion API key + page ID.
 
 ### License
 
-MIT — see [LICENSE](LICENSE).
+MIT
 
 ---
 
@@ -184,22 +90,61 @@ MIT — see [LICENSE](LICENSE).
 
 ### AI Wiki Curator là gì?
 
-**AI Wiki Curator** là skill cho Claude Code biến lệnh lưu thành entry đầy đủ trong Notion wiki. Dán link, thả prompt, ghi chú nhanh hoặc chia sẻ repo GitHub — Claude tự động phân loại, điền metadata, lưu đúng database và ghi lịch sử.
+**AI Wiki Curator** là skill dành cho Claude Code giúp tự động lưu, phân loại và tổ chức nội dung liên quan đến AI vào Notion wiki của bạn. Skill hỗ trợ bài viết, công cụ, prompt, nguồn theo dõi, repo mã nguồn mở và ghi chú cá nhân.
 
-### Version History
+Skill chỉ kích hoạt khi bạn có ý định lưu thông tin. Nó không trả lời câu hỏi kiến thức chung.
 
-Xem bảng phiên bản ở đầu trang (phiên bản mới nhất: **2.0.0**).
+### Câu lệnh kích hoạt
 
-### Cài đặt & Yêu cầu
+Sử dụng các câu lệnh sau:
 
-Giống phần English ở trên.
+| Ví dụ câu lệnh | Kết quả |
+|---|---|
+| `luu link nay vao wiki` | Lưu URL vào đúng database |
+| `them tool nay vao notion` | Tạo entry trong Công Cụ AI |
+| `ghi lai prompt nay` | Lưu vào Prompt & Template |
+| `luu repo github nay` | Lưu vào Open Source Repos |
+| `add this to my AI wiki` | Lệnh lưu tổng quát |
+
+### Cấu trúc Wiki
+
+Skill tự động tạo 6 database dưới trang chính **🧠 AI Wiki**:
+
+- 📙 Kiến Thức & Nghiên Cứu
+- 🛠 Công Cụ AI
+- 💻 Open Source Repos
+- 🧩 Prompt & Template
+- 📡 Nguồn Theo Dõi
+- 📝 Ghi Chú Cá Nhân
+- 📋 Change Logs (trang con)
+
+### Quy trình làm việc
+
+1. Phân tích input
+2. Phân loại nội dung
+3. Kiểm tra trùng lặp trong Notion
+4. Ghi entry đầy đủ metadata
+5. Cập nhật trang chính và Change Logs
+6. Hiển thị xác nhận kèm link Notion
+
+**Quy tắc quan trọng:** Nội dung do người dùng cung cấp được lưu **nguyên văn**. Chỉ cho phép định dạng.
+
+### Điểm nổi bật phân loại (v2.0.0)
+
+Repo GitHub (`github.com/{user}/{repo}`) bây giờ được lưu vào database **Open Source Repos**.
+
+Bảng phân loại đầy đủ và schema database có trong file `ai-wiki-curator.md`.
+
+### Cài đặt
+
+Sao chép file `ai-wiki-curator.md` vào thư mục skills của Claude Code và thiết lập Notion API key + page ID.
 
 ### Giấy phép
 
-MIT — xem [LICENSE](LICENSE).
+MIT
 
 ---
 
 <div align="center">
-  Made with Claude Code · <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill/issues">Report an issue</a> · Updated to v2.0.0
+  Made with Claude Code · <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill/issues">Báo lỗi / Report issue</a>
 </div>

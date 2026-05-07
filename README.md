@@ -1,16 +1,20 @@
-# 🧠 AI Wiki Curator — Claude Code Skill
-
 <p align="center">
   <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill/releases">
-    <img src="https://img.shields.io/github/v/release/chuong1224/Auto-Notion-Wiki-Skill?color=brightgreen&label=version" alt="Version">
+    <img src="https://img.shields.io/github/v/release/chuong1224/Auto-Notion-Wiki-Skill?color=blue&label=Version" alt="Version">
   </a>
+  <img src="https://img.shields.io/badge/Markdown-100000?logo=markdown&logoColor=white" alt="Markdown">
   <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT">
   </a>
   <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill/commits/main">
-    <img src="https://img.shields.io/github/last-commit/chuong1224/Auto-Notion-Wiki-Skill" alt="Last commit">
+    <img src="https://img.shields.io/github/last-commit/chuong1224/Auto-Notion-Wiki-Skill?color=brightgreen" alt="Last commit">
+  </a>
+  <a href="https://github.com/chuong1224/Auto-Notion-Wiki-Skill/stargazers">
+    <img src="https://img.shields.io/github/stars/chuong1224/Auto-Notion-Wiki-Skill?style=social" alt="Stars">
   </a>
 </p>
+
+# 🧠 AI Wiki Curator — Claude Code Skill
 
 **Version:** 2.0.0 · **License:** MIT
 

@@ -1,7 +1,7 @@
 ---
 name: ai-wiki-curator
-version: 2.0.0
-description: Kich hoat khi user muon luu noi dung vao AI Wiki tren Notion, them kien thuc AI, phan loai link bai viet, ghi chu, tool, prompt, nguon theo doi, repo open source. BAT CU KHI NAO user noi: luu link nay, them tool nay, ghi lai prompt nay, theo doi kenh nay, save cai nay vao wiki, luu repo nay, save github repo, luu open source nay, add vao notion, update wiki AI. Vi du: "luu link nay vao wiki", "them tool nay vao notion", "ghi lai prompt nay", "theo doi kenh youtube nay", "save bai viet nay", "luu repo github nay", "save this open source repo", "add this repo to wiki", "luu note nay", "add this to my AI wiki". Khong kich hoat khi user chi hoi kien thuc (what is X?) hoac yeu cau tao noi dung moi khong co y dinh luu.
+version: 2.2.0
+description: Kich hoat khi user muon luu noi dung vao AI Wiki tren Notion, them kien thuc AI, phan loai link bai viet, ghi chu, tool, prompt, nguon theo doi, repo open source, luu skill file. BAT CU KHI NAO user noi: luu link nay, them tool nay, ghi lai prompt nay, theo doi kenh nay, save cai nay vao wiki, luu repo nay, save github repo, luu open source nay, add vao notion, update wiki AI, luu skill nay, save skill file. Vi du: "luu link nay vao wiki", "them tool nay vao notion", "ghi lai prompt nay", "theo doi kenh youtube nay", "save bai viet nay", "luu repo github nay", "save this SKILL.md", "luu note nay", "add this to my AI wiki". Khong kich hoat khi user chi hoi kien thuc (what is X?) hoac yeu cau tao noi dung moi khong co y dinh luu.
 ---
 
 # AI Wiki Curator
@@ -18,7 +18,7 @@ Khi wiki chưa tồn tại, tạo đủ cấu trúc dưới master page **🧠 A
 | 📚 Kiến Thức & Nghiên Cứu | database | Papers, bài viết, blog, video đơn lẻ |
 | 🛠 Công Cụ AI | database | Tools thương mại, apps, APIs, SaaS |
 | 💻 Open Source Repos | database | GitHub/GitLab repos, free OSS projects |
-| 🧩 Prompt & Template | database | Prompts, system prompts, templates |
+| 🧩 Prompt & Template | database | Prompts, system prompts, templates, skill files |
 | 📡 Nguồn Theo Dõi | database | Kênh, profile, newsletter, community |
 | 🗒 Ghi Chú Cá Nhân | database | Raw notes, insights, ý tưởng |
 | 📋 Change Logs | sub-page | Lịch sử cập nhật wiki |
@@ -36,15 +36,21 @@ Nếu không chắc → hỏi user 1 câu, đưa 2 lựa chọn cụ thể.
 **B3 — Kiểm tra trùng**: Dùng notion-search trước khi tạo.
 Nếu đã tồn tại → hỏi "Cập nhật hay tạo mới?"
 
-**B4 — Ghi Notion**: Tạo entry với đầy đủ properties theo schema bên dưới.
-Nếu database chưa có → tạo mới.
+**B4 — Ghi Notion**: Xác định format trước khi ghi:
 
-> ⚠️ **CONTENT INTEGRITY RULE (v1.3.0 — BẮT BUỘC)**
+> **→ Nếu nội dung thuộc 🧩 Prompt & Template** (prompt, template, skill) **VÀ có fenced code block bên trong**:
+> Dùng **Action: Toggle + Code Block** (xem section riêng bên dưới).
+> Ghi vào **🧩 Prompt & Template**, Loại = `skill` / `system-prompt` / `template`.
+
+> **→ Mọi trường hợp còn lại**: Tạo entry với properties theo schema bên dưới.
+
+> ⚠️ **CONTENT INTEGRITY RULE (v1.4.0 — BẮT BUỘC)**
 >
-> Khi lưu **Prompt, Note, Skill, Template** (bất kỳ nội dung dạng text thuần do user cung cấp):
+> Khi lưu **Prompt, Note, Skill, Template, File** (bất kỳ nội dung text thuần do user cung cấp):
 > - **TUYỆT ĐỐI KHÔNG** chỉnh sửa từ ngữ, paraphrase, thêm ý, bớt ý, dịch, hoặc viết lại theo cách khác
 > - **CHỈ ĐƯỢC PHÉP** format để dễ đọc: code block, xuống dòng, căn chỉnh khoảng trắng, emoji section header
-> - **Quy tắc kiểm tra**: nếu đọc lại nội dung lưu mà không thấy đúng 100% từng từ của user → sai
+> - **NGOẠI LỆ KỸ THUẬT (v1.4.0)**: Khi lưu file có nested code blocks vào Notion, được phép **strip toàn bộ fenced code block syntax** (dòng ` ``` ` mở và đóng) — chỉ giữ lại phần text thuần bên trong. Đây là điều chỉnh format do giới hạn kỹ thuật của Notion (không hỗ trợ nested code blocks), **không vi phạm Content Integrity Rule**, không thay đổi nội dung/ý nghĩa.
+> - **Quy tắc kiểm tra**: nếu đọc lại nội dung lưu (sau khi đã strip ``` theo ngoại lệ kỹ thuật) mà không thấy đúng 100% từng từ của user → sai
 > - Với URL/link: fetch title và mô tả ngắn từ web là bình thường, không vi phạm rule này
 
 **B5 — Cập nhật Wiki Metadata**:
@@ -61,7 +67,7 @@ Nếu database chưa có → tạo mới.
 - Thêm entry MỚI Ở ĐẦU TRANG (prepend), không append cuối:
   `Version vX.X - DD/MM/YYYY - [Nội dung cập nhật]`
 - Nội dung cập nhật = auto-generate: "[Action] [Category]: [Title]"
-  Ví dụ: "Them tool: Cursor AI", "Luu repo: LangChain", "Luu paper: MoE Survey"
+  Ví dụ: "Them tool: Cursor AI", "Luu repo: LangChain", "Luu skill: ai-wiki-curator v2.1.0"
 
 **B6 — Xác nhận**:
 ```
@@ -71,6 +77,45 @@ Nếu database chưa có → tạo mới.
 📅 Change Log: Version vX.X - DD/MM/YYYY
 🔗 Notion: [link]
 ```
+
+---
+
+## Action: Lưu File/Skill (Toggle + Code Block)
+
+**Khi nào dùng**: Nội dung cần lưu thuộc category **🧩 Prompt & Template** (prompt, template, skill) **và** bên trong đã chứa ít nhất một fenced code block (` ``` `), mục tiêu là user có thể copy toàn bộ nội dung chỉ bằng 1 thao tác. Không áp dụng cho các category khác (config, script, ghi chú...).
+
+**Vấn đề cần tránh**: Notion không hỗ trợ nested code blocks. Nếu wrap toàn bộ nội dung trong một ` ```markdown ` duy nhất, parser sẽ đóng block sớm khi gặp ` ``` ` đầu tiên bên trong nội dung, làm vỡ layout.
+
+**Quy trình thực hiện**:
+
+| Bước | Hành động |
+|---|---|
+| 1 | Đọc toàn bộ nội dung file gốc |
+| 2 | Strip toàn bộ **dòng** ` ``` ` (mở và đóng của mọi fenced code block) — chỉ giữ phần text bên trong |
+| 3 | Xác định tên file + version (nếu có trong YAML frontmatter hoặc tên file) để điền vào summary |
+| 4 | Wrap vào cú pháp Toggle + Code Block (xem template bên dưới) |
+| 5 | Ghi vào Notion — database 🧩 Prompt & Template, Loại = `skill` / `system-prompt` / `template` |
+
+**Template Toggle + Code Block**:
+
+```
+<details>
+<summary>[Tên file] — [Mô tả ngắn] (mở để copy toàn bộ)</summary>
+
+[Toàn bộ nội dung file, đã strip fenced code block syntax]
+
+</details>
+```
+
+**Ví dụ summary chuẩn**:
+- `SKILL.md — ai-wiki-curator v2.2.0 (mở để copy toàn bộ)`
+- `system-prompt.txt — Prompt phân tích CV (mở để copy toàn bộ)`
+- `template.md — Template viết LinkedIn post (mở để copy toàn bộ)`
+
+**Lưu ý**:
+- Notion tự thêm nút **Copy** vào góc trên phải của code block → user copy được toàn bộ chỉ bằng 1 click
+- Summary nên ghi rõ tên file + version để dễ nhận diện khi collapsed
+- Strip ` ``` ` là điều chỉnh format kỹ thuật, không phải chỉnh sửa nội dung (xem CONTENT INTEGRITY RULE)
 
 ---
 
@@ -111,8 +156,9 @@ Nếu database chưa có → tạo mới.
 
 | Dấu hiệu | Database | Tag |
 |---|---|---|
-| Bắt đầu "Act as", "You are a", "Bạn là", có "###" | 🧩 Prompt | system-prompt |
-| Dạng template có placeholder [X] | 🧩 Prompt | template |
+| Prompt/template/skill có fenced code block bên trong | 🧩 Prompt & Template | skill / template |
+| Bắt đầu "Act as", "You are a", "Bạn là", có "###" | 🧩 Prompt & Template | system-prompt |
+| Dạng template có placeholder [X] | 🧩 Prompt & Template | template |
 | Text ngắn, ghi chú nhanh | 🗒 Ghi Chú | raw-note |
 | Text dài, có cấu trúc, nhiều khái niệm | 🗒 Ghi Chú | note |
 
@@ -161,10 +207,10 @@ Nếu database chưa có → tạo mới.
 ### 🧩 Prompt & Template
 | Property | Type | Ghi chú |
 |---|---|---|
-| Tên Prompt | title | Đặt tên mô tả mục đích |
-| Nội dung | rich_text | ⚠️ Lưu NGUYÊN VĂN — không chỉnh sửa |
-| Loại | select | System Prompt / User Prompt / Template / Chain |
-| Dùng cho | multi_select | Viết lách / Coding / Research / Phân tích |
+| Tên | title | Đặt tên mô tả mục đích + version nếu có |
+| Nội dung | rich_text | ⚠️ Lưu NGUYÊN VĂN — không chỉnh sửa (xem CONTENT INTEGRITY RULE) |
+| Loại | select | System Prompt / User Prompt / Template / Chain / **skill** |
+| Dùng cho | multi_select | Viết lách / Coding / Research / Phân tích / AI Workflow |
 | Tags | multi_select | |
 | Nguồn | url | Link gốc (nếu có) |
 | Ngày lưu | date | Auto |
@@ -205,7 +251,9 @@ Nếu database chưa có → tạo mới.
 **G9 — Change Logs chưa tồn tại**: Tạo sub-page "📋 Change Logs" ngay bên trong 🧠 AI Wiki. Entry đầu tiên bắt đầu từ v1.0. Không hỏi user, tự tạo.
 **G10 — "Cập nhật lần cuối" chưa có trên master page**: Append text block mới ở cuối trang. Không để master page thiếu dòng này.
 **G11 — Không đọc được version từ Change Logs**: Nếu page tồn tại nhưng không parse được version → dùng ngày làm fallback: `Version [YYYYMMDD] - DD/MM/YYYY - [Nội dung]`. Không bỏ qua bước ghi Change Logs.
-**G12 — Tự ý chỉnh sửa nội dung Prompt / Note / Skill**: TUYỆT ĐỐI KHÔNG paraphrase, dịch, rút gọn, hay viết lại nội dung do user cung cấp. Chỉ được phép format thuần túy. Vi phạm rule này là lỗi nghiêm trọng nhất.
-**G13 — Repo có hosted version thương mại**: Một số repo (ví dụ: Supabase, Milvus) vừa có bản OSS vừa có SaaS. Nếu user paste link GitHub repo → 💻 Open Source. Nếu paste link landing page (supabase.com) → 🛠 Công Cụ AI. Không tự chuyển loại.
+**G12 — Tự ý chỉnh sửa nội dung Prompt / Note / Skill**: TUYỆT ĐỐI KHÔNG paraphrase, dịch, rút gọn, hay viết lại nội dung do user cung cấp. Chỉ được phép format thuần túy và strip ``` theo ngoại lệ kỹ thuật. Vi phạm rule này là lỗi nghiêm trọng nhất.
+**G13 — Repo có hosted version thương mại**: Một số repo (ví dụ: Supabase, Milvus) vừa có bản OSS vừa có SaaS. Nếu user paste link GitHub repo → 💻 Open Source. Nếu paste link landing page → 🛠 Công Cụ AI. Không tự chuyển loại.
 **G14 — Thiếu thông tin repo**: License và Stars thường không có ngay. Để giá trị "Unknown" / "dưới-1k" làm default nếu không fetch được. Không block việc lưu vì thiếu 2 field này.
 **G15 — HuggingFace model repo vs code repo**: huggingface.co/models/ → 🛠 Công Cụ AI (model). Nếu user paste link GitHub của cùng project đó → 💻 Open Source Repos (repo code). Hai entry riêng biệt, không merge.
+**G16 — File có nested code blocks: quên strip ```**: Khi dùng Toggle+Code Block, bắt buộc strip TẤT CẢ dòng ``` trong nội dung trước khi wrap. Nếu bỏ sót dù 1 dòng ``` → Notion đóng code block sớm → layout vỡ. Sau khi strip, kiểm tra lại: không còn dòng nào chỉ chứa ```.
+**G17 — Config/script có code block: không dùng Toggle+Code Block**: Action này chỉ áp dụng cho 🧩 Prompt & Template. Nếu user lưu docker-compose.yml, .env, script bash... → phân loại vào 🗒 Ghi Chú hoặc hỏi user, không tự áp dụng Toggle+Code Block format.

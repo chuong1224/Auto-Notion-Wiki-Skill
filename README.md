@@ -16,7 +16,7 @@
 
 # 🧠 AI Wiki Curator — Claude Code Skill
 
-**Version:** 2.0.0 · **License:** MIT
+**Version:** 2.2.0 · **License:** MIT
 
 ---
 
@@ -24,6 +24,7 @@
 
 | Version | Date       | Changes |
 |---------|------------|---------|
+| **2.2.0** | 2026-05-07 | Skill file format update: `SKILL.md` with YAML frontmatter (name, version, description). Toggle+Code Block action for prompt/template/skill files. Added Gotchas G16–G17. Updated CONTENT INTEGRITY RULE with technical exception for nested code blocks. |
 | **2.0.0** | 2026-05-07 | Added 💻 Open Source Repos database. Fixed GitHub repo classification. Added Gotchas G13–G15. |
 | 1.3.0   | 2026-04-24 | Initial public release. |
 
